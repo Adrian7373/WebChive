@@ -20,7 +20,7 @@ yarn-debug.log
 # =========================
 server/prisma/*.db
 server/prisma/*.db-journal
-server/generated/
+/server/generated/
 
 # =========================
 # OS Generated Files
