@@ -1,0 +1,50 @@
+# =========================
+# Node.js & Dependencies
+# =========================
+node_modules/
+npm-debug.log
+yarn-error.log
+yarn-debug.log
+
+# =========================
+# Environment Variables
+# =========================
+.env
+.env.local
+.env.development
+.env.test
+.env.production
+
+# =========================
+# Prisma & Databases
+# =========================
+server/prisma/*.db
+server/prisma/*.db-journal
+
+# =========================
+# OS Generated Files
+# =========================
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# =========================
+# Editor & IDE Configs
+# =========================
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# =========================
+# Build Outputs
+# =========================
+dist/
+build/

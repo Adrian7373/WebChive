@@ -1,0 +1,14 @@
+{
+    "manifest_version": 3,
+    "name": "WebChiver",
+    "version": "1.0",
+    "action": {
+        "default_popup": "popup.html"
+    },
+    "permissions": [
+        "activeTab"
+    ],
+    "host_permissions": [
+        "http://localhost:3000/*"
+    ]
+}
