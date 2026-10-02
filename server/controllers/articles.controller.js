@@ -73,8 +73,17 @@ export const saveArticle = async (req, res) => {
 export const getArticles = async (req, res) => {
 
     try {
+        const q = typeof req.query.q === "string" ? req.query.q.trim() : "";
 
         const articles = await prisma.article.findMany({
+            where: q
+                ? {
+                    OR: [
+                        { title: { contains: q, mode: "insensitive" } },
+                        { content: { contains: q, mode: "insensitive" } },
+                    ],
+                }
+                : undefined,
             omit: {
                 content: true
             },
