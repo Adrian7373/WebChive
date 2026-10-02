@@ -1,5 +1,5 @@
 import express from "express";
-import { saveArticle } from "../controllers/articles.controller.js";
+import { saveArticle, getArticles, getArticleById } from "../controllers/articles.controller.js";
 
 const router = express.Router();
 
