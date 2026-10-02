@@ -112,3 +112,18 @@ export const getArticleById = async (req, res) => {
         res.status(500).json({ error: "Server error" })
     }
 }
+
+export const deleteArticle = async (req, res) => {
+    const id = Number(req.params.id);
+    if (!id) return res.status(400).json({ error: "Missing article ID" })
+
+    try {
+        await prisma.article.delete({
+            where: { id }
+        })
+        res.status(200).json({ message: "Article deleted successfully" })
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ error: "Server error" })
+    }
+}
