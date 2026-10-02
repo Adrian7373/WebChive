@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
 import { Link } from "react-router-dom";
 
 
@@ -38,9 +38,26 @@ type Tag = {
 
 export default function DashboardPage() {
 
+    const queryClient = useQueryClient();
+
+    const deleteArticle = async (id: string) => {
+        const response = await fetch(`http://localhost:3000/api/v1/articles/${id}`, {
+            method: "DELETE"
+        })
+        if (!response.ok) throw new Error("Failed to delete article");
+        return response.json();
+    }
+
     const { data, isPending, error } = useQuery({
         queryKey: ["articles"],
         queryFn: fetchArticles
+    })
+
+    const deleteMutation = useMutation({
+        mutationFn: deleteArticle,
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ["articles"] });
+        }
     })
 
     if (isPending) return (
@@ -62,11 +79,14 @@ export default function DashboardPage() {
                 <h2 className="text-xl">Articles</h2>
                 <div className="flex flex-col gap-2">
                     {data.map((article) => (
-                        <Link key={article.id} to={`/read/${article.id}`} className="border-1 p-4">
-                            <p>{article.title}</p>
-                            <p>By {article.byline}</p>
-                            <p>Time to read: {article.readingTime}</p>
-                        </Link>
+                        <div key={article.id} className="border p-4">
+                            <Link to={`/read/${article.id}`}>
+                                <p>{article.title}</p>
+                                <p>By {article.byline}</p>
+                                <p>Time to read: {article.readingTime}</p>
+                            </Link>
+                            <button onClick={() => deleteMutation.mutate(String(article.id))} className="px-4 py-2">Delete</button>
+                        </div>
                     ))}
                 </div>
             </div>
