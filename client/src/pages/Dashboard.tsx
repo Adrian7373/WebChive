@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
 import { Link } from "react-router-dom";
 
@@ -7,8 +8,11 @@ type ArticlesResponse = {
     articles: Article[]
 }
 
-const fetchArticles = async (): Promise<Article[]> => {
-    const response = await fetch("http://localhost:3000/api/v1/articles");
+const fetchArticles = async (searchTerm: string): Promise<Article[]> => {
+    const params = new URLSearchParams();
+    if (searchTerm) params.set("q", searchTerm);
+
+    const response = await fetch(`http://localhost:3000/api/v1/articles${params.size ? `?${params}` : ""}`);
     if (!response.ok) throw new Error("Failed to fetch articles");
 
     const data: ArticlesResponse = await response.json();
@@ -39,6 +43,16 @@ type Tag = {
 export default function DashboardPage() {
 
     const queryClient = useQueryClient();
+    const [searchTerm, setSearchTerm] = useState("");
+    const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
+
+    useEffect(() => {
+        const timeoutId = window.setTimeout(() => {
+            setDebouncedSearchTerm(searchTerm.trim());
+        }, 300);
+
+        return () => window.clearTimeout(timeoutId);
+    }, [searchTerm]);
 
     const deleteArticle = async (id: string) => {
         const response = await fetch(`http://localhost:3000/api/v1/articles/${id}`, {
@@ -49,8 +63,8 @@ export default function DashboardPage() {
     }
 
     const { data, isPending, error } = useQuery({
-        queryKey: ["articles"],
-        queryFn: fetchArticles
+        queryKey: ["articles", debouncedSearchTerm],
+        queryFn: () => fetchArticles(debouncedSearchTerm)
     })
 
     const deleteMutation = useMutation({
@@ -77,6 +91,14 @@ export default function DashboardPage() {
             <h1 className="font-bold text-4xl">Dashboard</h1>
             <div>
                 <h2 className="text-xl">Articles</h2>
+                <input
+                    type="search"
+                    value={searchTerm}
+                    onChange={(event) => setSearchTerm(event.target.value)}
+                    placeholder="Search articles..."
+                    aria-label="Search articles"
+                    className="my-2 w-full rounded border p-2"
+                />
                 <div className="flex flex-col gap-2">
                     {data.map((article) => (
                         <div key={article.id} className="border p-4">
