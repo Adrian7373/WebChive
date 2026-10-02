@@ -1,3 +1,6 @@
+@import url('https://googleapis.com');
 @import "tailwindcss";
 
-@theme {}
+@theme {
+    --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+}

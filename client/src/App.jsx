@@ -4,7 +4,7 @@ import ReaderPage from './pages/Reader';
 
 export default function App() {
     return (
-        <div className="max-w-4xl mx-auto p-6">
+        <div className="max-w-4xl mx-auto p-6 font-inter">
 
             <Routes>
 
