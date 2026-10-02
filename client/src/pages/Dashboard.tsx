@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
 import { Link } from "react-router-dom";
+import { ChevronRight, Trash } from "lucide-react"
 
 
 type ArticlesResponse = {
@@ -88,26 +89,30 @@ export default function DashboardPage() {
 
     return (
         <div className="flex flex-col gap-4">
-            <h1 className="font-bold text-4xl">Dashboard</h1>
             <div>
-                <h2 className="text-xl">Articles</h2>
+                <h1 className="text-4xl font-bold mt-5">Articles</h1>
                 <input
                     type="search"
                     value={searchTerm}
                     onChange={(event) => setSearchTerm(event.target.value)}
                     placeholder="Search articles..."
                     aria-label="Search articles"
-                    className="my-2 w-full rounded border p-2"
+                    className="my-2 w-full rounded border p-2 focus:outline-none"
                 />
-                <div className="flex flex-col gap-2">
+                <div className="flex flex-col items-center gap-2 h-[calc(100vh-250px)] overflow-y-auto pr-2 pb-4">
                     {data.map((article) => (
-                        <div key={article.id} className="border p-4">
-                            <Link to={`/read/${article.id}`}>
-                                <p>{article.title}</p>
-                                <p>By {article.byline}</p>
-                                <p>Time to read: {article.readingTime}</p>
-                            </Link>
-                            <button onClick={() => deleteMutation.mutate(String(article.id))} className="px-4 py-2">Delete</button>
+                        <div key={article.id} className="border p-4 w-full flex">
+                            <div className="grow">
+                                <Link to={`/read/${article.id}`}>
+                                    <p>{article.title}</p>
+                                    <p>By {article.byline}</p>
+                                    <p>Time to read: {article.readingTime} minutes</p>
+                                </Link>
+                            </div>
+                            <div className="flex justify-center items-center">
+                                <button onClick={() => deleteMutation.mutate(String(article.id))} className="text-red-500"><Trash /></button>
+                                <ChevronRight />
+                            </div>
                         </div>
                     ))}
                 </div>
